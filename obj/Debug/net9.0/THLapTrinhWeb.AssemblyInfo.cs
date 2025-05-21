@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("THLapTrinhWeb")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ec5cd96e00b25986379e68cdaba0676047a23891")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f08d7e2111bffe31b58804add6e55d2d01859e0c")]
 [assembly: System.Reflection.AssemblyProductAttribute("THLapTrinhWeb")]
 [assembly: System.Reflection.AssemblyTitleAttribute("THLapTrinhWeb")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
