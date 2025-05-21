@@ -8,8 +8,32 @@
             <p><strong>Tên:</strong> @Model.Name</p>
             <p><strong>Giá:</strong> @Model.Price</p>
             <p><strong>Mô tả:</strong> @Model.Description</p>
-        </div>
+            <!-- <img src="@Model.ImageUrl" alt="Product Image" style="width: 300px;height: auto;" /> -->
 
+            @if (Model.ImageUrls != null && Model.ImageUrls.Any())
+            {
+                <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @foreach (var imageUrl in Model.ImageUrls)
+                        {
+                            <div class="carousel-item @(Model.ImageUrls.IndexOf(imageUrl) == 0 ? "active" : "")">
+                                <div class="d-flex justify-content-center">
+                                    <img src="@imageUrl" class="d-block img-fluid" alt="Product Image" style="max-width: 800px; height: auto; object-fit: contain;">
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            }
+        </div>
         <a asp-action="Index" class="btn btn-outline-secondary">Quay lại danh sách</a>
     </div>
 </div>

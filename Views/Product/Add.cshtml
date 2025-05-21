@@ -12,7 +12,7 @@
                     <h4 class="mb-0">Add Product</h4>
                 </div>
                 <div class="card-body">
-                    <form asp-action="Add">
+                    <form asp-action="Add" enctype = "multipart/form-data">
                         <div asp-validation-summary="All" class="alert alert-danger"></div>
 
                         <div class="mb-3">
@@ -37,6 +37,17 @@
                             <label asp-for="CategoryId" class="form-label">Category</label>
                             <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select"></select>
                             <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl" class="form-label">Product Image</label>
+                            <input type="file" asp-for="ImageUrl" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ImageUrls" class="form-label">Additional Image</label>
+                            <input type="file" asp-for="ImageUrls" class="form-control" multiple  />
+                            <span asp-validation-for="ImageUrls" class="text-danger"></span>
                         </div>
 
                         <div class="text-end">

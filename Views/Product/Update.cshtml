@@ -4,7 +4,7 @@
     <div class="card shadow p-4">
         <h2 class="text-warning mb-4">Chỉnh sửa sản phẩm</h2>
 
-        <form asp-action="Update">
+        <form asp-action="Update" enctype = "multipart/form-data">
             <input type="hidden" asp-for="Id" />
 
             <div class="mb-3">
@@ -23,6 +23,53 @@
                 <label asp-for="Description" class="form-label"></label>
                 <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+           <div class="mb-3">
+                <label class="form-label">Ảnh sản phẩm hiện tại</label>
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <div>
+                        <img src="@Model.ImageUrl" alt="Current Product Image" class="img-fluid" style="max-width: 300px; height: auto;" />
+                    </div>
+                }
+                else
+                {
+                    <p>Chưa có ảnh sản phẩm</p>
+                }
+            </div>
+
+            <!-- Chỉnh sửa ảnh sản phẩm -->
+            <div class="mb-3">
+                <label asp-for="ImageUrl" class="form-label">Ảnh sản phẩm mới</label>
+                <input type="file" asp-for="ImageUrl" class="form-control" />
+            </div>
+
+            <!-- Hiển thị các ảnh bổ sung -->
+            <div class="mb-3">
+                <label asp-for="ImageUrls" class="form-label">Ảnh bổ sung hiện tại</label>
+                @if (Model.ImageUrls != null && Model.ImageUrls.Any())
+                {
+                    <div class="row">
+                        @foreach (var imageUrl in Model.ImageUrls)
+                        {
+                            <div class="col-md-3">
+                                <img src="@imageUrl" alt="Additional Product Image" class="img-fluid" style="max-width: 100%; height: auto;" />
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p>Chưa có ảnh bổ sung</p>
+                }
+            </div>
+
+            <!-- Thêm ảnh bổ sung -->
+            <div class="mb-3">
+                <label asp-for="ImageUrls" class="form-label">Ảnh bổ sung mới</label>
+                <input type="file" asp-for="ImageUrls" class="form-control" multiple />
+                <span asp-validation-for="ImageUrls" class="text-danger"></span>
             </div>
 
             <div class="d-flex gap-2">

@@ -10,6 +10,8 @@ namespace THLapTrinhWeb.Models
         public decimal Price { get; set; }
         public string Description { get; set; }
         public int CategoryId { get; set; }
+        public string? ImageUrl { get; set; } // Đường dẫn đến hình ảnh đại diện
+        public List<string>? ImageUrls { get; set; } // Danh sách các hình ảnh
     }
 }
 
