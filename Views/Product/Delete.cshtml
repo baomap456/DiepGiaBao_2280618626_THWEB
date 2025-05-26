@@ -1,22 +1,19 @@
 @model THLapTrinhWeb.Models.Product
 
 <div class="container mt-5">
-    <div class="card shadow p-4">
-        <h2 class="text-danger mb-4">Xác nhận xóa sản phẩm</h2>
-
-        <div class="mb-3">
-            <h5><strong>Tên:</strong> @Model.Name</h5>
-            <h5><strong>Giá:</strong> @Model.Price</h5>
-            <h5><strong>Mô tả:</strong> @Model.Description</h5>
+    <div class="card shadow-sm">
+        <div class="card-header bg-danger text-white">
+            <h2 class="mb-0">Delete Product</h2>
         </div>
-
-        <form asp-action="DeleteConfirmed" method="post">
-            <input type="hidden" asp-for="Id" />
-
-            <div class="d-flex gap-2">
-                <input type="submit" value="Xóa" class="btn btn-danger" />
-                <a asp-action="Index" class="btn btn-secondary">Hủy</a>
-            </div>
-        </form>
+        <div class="card-body">
+            <form asp-action="DeleteConfirmed" method="post">
+                <input type="hidden" asp-for="Id" />
+                <p class="card-text">Are you sure you want to delete @Model.Name?</p>
+                <div class="d-flex">
+                    <button type="submit" class="btn btn-danger mr-2">Delete</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

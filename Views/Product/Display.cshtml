@@ -1,39 +1,18 @@
 @model THLapTrinhWeb.Models.Product
 
 <div class="container mt-5">
-    <div class="card shadow p-4">
-        <h2 class="mb-4 text-primary">Chi tiết sản phẩm</h2>
-
-        <div class="mb-3">
-            <p><strong>Tên:</strong> @Model.Name</p>
-            <p><strong>Giá:</strong> @Model.Price</p>
-            <p><strong>Mô tả:</strong> @Model.Description</p>
-            <!-- <img src="@Model.ImageUrl" alt="Product Image" style="width: 300px;height: auto;" /> -->
-
-            @if (Model.ImageUrls != null && Model.ImageUrls.Any())
-            {
-                <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        @foreach (var imageUrl in Model.ImageUrls)
-                        {
-                            <div class="carousel-item @(Model.ImageUrls.IndexOf(imageUrl) == 0 ? "active" : "")">
-                                <div class="d-flex justify-content-center">
-                                    <img src="@imageUrl" class="d-block img-fluid" alt="Product Image" style="max-width: 800px; height: auto; object-fit: contain;">
-                                </div>
-                            </div>
-                        }
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            }
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+            <h2 class="mb-0">@Model.Name</h2>
         </div>
-        <a asp-action="Index" class="btn btn-outline-secondary">Quay lại danh sách</a>
+        <div class="card-body">
+            <h4 class="mb-3">Price: @Model.Price</h4>
+            <p class="card-text">@Model.Description</p>
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" alt="Product Image" class="img-fluid mb-3" style="max-width:200px;" />
+            }
+            <a asp-action="Index" class="btn btn-primary">Back to List</a>
+        </div>
     </div>
 </div>

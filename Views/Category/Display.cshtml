@@ -1,0 +1,14 @@
+@model THLapTrinhWeb.Models.Category
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h2 class="mb-0">Category Details</h2>
+        </div>
+        <div class="card-body">
+            <h4 class="mb-3">ID: @Model.Id</h4>
+            <h4 class="mb-3">Name: @Model.Name</h4>
+            <a asp-action="Index" class="btn btn-primary">Back to List</a>
+        </div>
+    </div>
+</div>

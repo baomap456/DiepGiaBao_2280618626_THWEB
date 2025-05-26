@@ -7,52 +7,36 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card shadow">
+            <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Add Product</h4>
+                    <h2 class="mb-0">Add Product</h2>
                 </div>
                 <div class="card-body">
-                    <form asp-action="Add" enctype = "multipart/form-data">
-                        <div asp-validation-summary="All" class="alert alert-danger"></div>
-
-                        <div class="mb-3">
-                            <label asp-for="Name" class="form-label"></label>
+                    <form asp-action="Add" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label asp-for="Name"></label>
                             <input asp-for="Name" class="form-control" />
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Price" class="form-label"></label>
+                        <div class="form-group">
+                            <label asp-for="Price"></label>
                             <input asp-for="Price" class="form-control" />
                             <span asp-validation-for="Price" class="text-danger"></span>
                         </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Description" class="form-label"></label>
-                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                        <div class="form-group">
+                            <label asp-for="Description"></label>
+                            <textarea asp-for="Description" class="form-control"></textarea>
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
-
-                        <div class="mb-3">
-                            <label asp-for="CategoryId" class="form-label">Category</label>
-                            <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select"></select>
-                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="CategoryId">Category</label>
+                            <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-control"></select>
                         </div>
-
-                        <div class="mb-3">
-                            <label asp-for="ImageUrl" class="form-label">Product Image</label>
+                        <div class="form-group">
+                            <label asp-for="ImageUrl">Product Image</label>
                             <input type="file" asp-for="ImageUrl" class="form-control" />
                         </div>
-
-                        <div class="mb-3">
-                            <label asp-for="ImageUrls" class="form-label">Additional Image</label>
-                            <input type="file" asp-for="ImageUrls" class="form-control" multiple  />
-                            <span asp-validation-for="ImageUrls" class="text-danger"></span>
-                        </div>
-
-                        <div class="text-end">
-                            <button type="submit" class="btn btn-primary">Add Product</button>
-                        </div>
+                        <button type="submit" class="btn btn-primary">Add</button>
                     </form>
                 </div>
             </div>

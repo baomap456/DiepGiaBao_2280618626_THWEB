@@ -1,0 +1,27 @@
+@model THLapTrinhWeb.Models.Category
+
+@{
+    ViewData["Title"] = "Add Category";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Add Category</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Add" method="post">
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <!-- Add additional fields here if the Category model has more properties -->
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Add Category</button>
+                    <a asp-action="Index" class="btn btn-secondary ml-2">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
