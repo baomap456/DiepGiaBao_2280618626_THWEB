@@ -15,7 +15,7 @@ namespace THLapTrinhWeb.Repositories
         {
             // return await _context.Products.ToListAsync(); 
             return await _context.Products
-        .Include(p => p.Category) // Include thông tin về category 
+        .Include(p => p.Category)
         .ToListAsync();
 
         }
