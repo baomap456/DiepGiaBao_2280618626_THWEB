@@ -24,8 +24,10 @@ namespace THLapTrinhWeb.Repositories
         {
             // return await _context.Products.FindAsync(id); 
             // lấy thông tin kèm theo category 
-            return await _context.Products.Include(p =>
-            p.Category).FirstOrDefaultAsync(p => p.Id == id);
+            return await _context.Products
+            .Include(p =>p.Category)
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task AddAsync(Product product)
@@ -45,6 +47,13 @@ namespace THLapTrinhWeb.Repositories
             var product = await _context.Products.FindAsync(id);
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Product> GetByIdWithImagesAsync(int id)
+        {
+            return await _context.Products
+                .Include(p => p.Images)
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
     }

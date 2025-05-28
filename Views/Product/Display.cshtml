@@ -1,5 +1,20 @@
 @model THLapTrinhWeb.Models.Product
 
+<style>
+.product-carousel-media {
+    width: 100%;
+    max-width: 400px;
+    height: 300px;
+    object-fit: contain;  /* Thay cover thành contain để ảnh/video toàn bộ hiện */
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    background-color: #000;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+</style>
+
 <div class="container mt-5">
     <div class="card shadow-sm">
         <div class="card-header bg-secondary text-white">
@@ -8,7 +23,71 @@
         <div class="card-body">
             <h4 class="mb-3">Price: @Model.Price</h4>
             <p class="card-text">@Model.Description</p>
-            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            @if (Model.Images != null && Model.Images.Count > 0)
+            {
+                <div id="productCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @for (int i = 0; i < Model.Images.Count; i++)
+                        {
+                            var activeClass = i == 0 ? "active" : "";
+                            <div class="carousel-item @activeClass">
+                                <!-- <img src="@Model.Images[i].Url" class="d-block w-100" alt="Product Image @(i+1)"/> -->
+                                @if (Model.Images[i].IsVideo)
+                                {
+                                    var url = Model.Images[i].Url;
+                                    if (url.Contains("youtube.com") || url.Contains("youtu.be"))
+                                    {
+                                        // Chuyển URL YouTube thành iframe embed
+                                        string videoId = "";
+                                        if (url.Contains("youtube.com"))
+                                        {
+                                            var query = new Uri(url).Query;
+                                            var queryParams = System.Web.HttpUtility.ParseQueryString(query);
+                                            videoId = queryParams["v"] ?? "";
+                                        }
+                                        else if (url.Contains("youtu.be"))
+                                        {
+                                            videoId = new Uri(url).Segments.Last();
+                                        }
+
+                                        if (!string.IsNullOrEmpty(videoId))
+                                        {
+                                            <iframe class="product-carousel-media" src="https://www.youtube.com/embed/@videoId" allowfullscreen></iframe>
+                                        }
+                                        else
+                                        {
+                                            <video controls class="product-carousel-media" preload="metadata">
+                                                <source src="@url" type="video/mp4" />
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <video controls class="product-carousel-media" preload="metadata">
+                                            <source src="@Model.Images[i].Url" type="video/mp4" />
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    }
+                                }
+                                else
+                                {
+                                    <img src="@Model.Images[i].Url" alt="Product Image @(i+1)" class="product-carousel-media" />
+                                }
+                            </div>
+                        }
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            }
+            else if (!string.IsNullOrEmpty(Model.ImageUrl))
             {
                 <img src="@Model.ImageUrl" alt="Product Image" class="img-fluid mb-3" style="max-width:200px;" />
             }

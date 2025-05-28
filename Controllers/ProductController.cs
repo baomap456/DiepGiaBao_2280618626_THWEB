@@ -8,11 +8,13 @@ namespace THLapTrinhWeb.Controllers
     {
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ApplicationDbContext _context;
 
-        public ProductController(IProductRepository productRepository, ICategoryRepository categoryRepository)
+        public ProductController(IProductRepository productRepository, ICategoryRepository categoryRepository,ApplicationDbContext context)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
+            _context = context;
         }
 
         public async Task<IActionResult> Index()
@@ -29,7 +31,7 @@ namespace THLapTrinhWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(Product product, IFormFile imageUrl)
+        public async Task<IActionResult> Add(Product product, IFormFile imageUrl,List<IFormFile> Images,string MediaUrl)
         {
             if (ModelState.IsValid)
             {
@@ -40,6 +42,36 @@ namespace THLapTrinhWeb.Controllers
                 }
 
                 await _productRepository.AddAsync(product);
+                
+                if (!string.IsNullOrEmpty(MediaUrl))
+                {
+                    var isVideo = MediaUrl.EndsWith(".mp4") || MediaUrl.EndsWith(".webm") || MediaUrl.EndsWith(".ogg")
+                                                            || MediaUrl.Contains("youtube.com")
+                                                            || MediaUrl.Contains("youtu.be");;
+                    var productImage = new ProductImage
+                    {
+                        Url = MediaUrl,
+                        ProductId = product.Id,
+                        IsVideo = isVideo
+                    };
+                    await _context.ProductImages.AddAsync(productImage);
+                    await _context.SaveChangesAsync();
+                }
+
+                if (Images != null && Images.Count > 0)
+                {
+                    foreach (var file in Images)
+                    {
+                        var imagePath = await SaveImage(file);
+                        var productImage = new ProductImage
+                        {
+                            Url = imagePath,
+                            ProductId = product.Id
+                        };
+                        await _context.ProductImages.AddAsync(productImage);
+                    }
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
             }
             // Nếu ModelState không hợp lệ, hiển thị form với dữ liệu đã nhập 
@@ -79,9 +111,8 @@ namespace THLapTrinhWeb.Controllers
             return View(product);
         }
         [HttpPost]
-        public async Task<IActionResult> Update(int id, Product product, IFormFile imageUrl)
+        public async Task<IActionResult> Update(int id, Product product, IFormFile imageUrl,List<int> ExistingImageIds,List<bool> IsVideos,List<IFormFile> UpdatedImageFiles)
         {
-            ModelState.Remove("ImageUrl"); // Loại bỏ xác thực ModelState cho 
 
             if (id != product.Id)
             {
@@ -91,25 +122,25 @@ namespace THLapTrinhWeb.Controllers
             if (ModelState.IsValid)
             {
 
-                var existingProduct = await _productRepository.GetByIdAsync(id); // Giả định có phương thức GetByIdAsync 
-
-                // Giữ nguyên thông tin hình ảnh nếu không có hình mới được 
-                if (imageUrl == null)
-                {
-                    product.ImageUrl = existingProduct.ImageUrl;
-                }
-                else
-                {
-                    // Lưu hình ảnh mới 
-                    product.ImageUrl = await SaveImage(imageUrl);
-                }
+                var existingProduct = await _productRepository.GetByIdAsync(id);
 
                 // Cập nhật các thông tin khác của sản phẩm 
                 existingProduct.Name = product.Name;
                 existingProduct.Price = product.Price;
                 existingProduct.Description = product.Description;
                 existingProduct.CategoryId = product.CategoryId;
-                existingProduct.ImageUrl = product.ImageUrl;
+                for (int i = 0; i < ExistingImageIds.Count; i++)
+                {
+                    var image = existingProduct.Images.FirstOrDefault(img => img.Id == ExistingImageIds[i]);
+                    if (image != null)
+                    {
+                        if (UpdatedImageFiles != null && i < UpdatedImageFiles.Count && UpdatedImageFiles[i] != null)
+                        {
+                            image.Url = await SaveImage(UpdatedImageFiles[i]);
+                            image.IsVideo = false;
+                        }
+                    }
+                }
 
                 await _productRepository.UpdateAsync(existingProduct);
                 return RedirectToAction(nameof(Index));
