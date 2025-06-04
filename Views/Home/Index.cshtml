@@ -1,0 +1,118 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container">
+    <!-- Hero Section -->
+    <div class="jumbotron bg-primary text-white text-center py-5 mb-5 rounded">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Welcome to Product Management System</h1>
+            <p class="lead">Manage your products and categories efficiently with our easy-to-use platform</p>
+            <hr class="my-4 bg-white">
+            <p class="mb-4">Get started by exploring our products or create your account to manage your own inventory.
+            </p>
+
+            <!-- Navigation Buttons -->
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a asp-controller="Product" asp-action="Index" class="btn btn-light btn-lg px-4">
+                    <i class="fas fa-box me-2"></i>View Products
+                </a>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <span class="text-white-50">Welcome, @User.Identity.Name!</span>
+                    <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-outline-light btn-lg px-4">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-success btn-lg px-4">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </a>
+                    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-light btn-lg px-4">
+                        <i class="fas fa-user-plus me-2"></i>Register
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mb-5">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-boxes fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Product Management</h5>
+                    <p class="card-text">Add, edit, and manage your products with detailed information including images
+                        and descriptions.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-tags fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Category Organization</h5>
+                    <p class="card-text">Organize your products into categories for better management and easier
+                        navigation.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-user-shield fa-3x text-warning mb-3"></i>
+                    <h5 class="card-title">User Authentication</h5>
+                    <p class="card-text">Secure user registration and login system to protect your data and manage
+                        access.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-header">
+                    <h4 class="mb-0">Quick Actions</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a asp-controller="Product" asp-action="Index"
+                                class="btn btn-outline-primary btn-block w-100">
+                                <i class="fas fa-list me-2"></i>Browse All Products
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a asp-controller="Category" asp-action="Index"
+                                class="btn btn-outline-secondary btn-block w-100">
+                                <i class="fas fa-folder me-2"></i>Browse Categories
+                            </a>
+                        </div>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="col-md-6 mb-3">
+                                <a asp-controller="Product" asp-action="Add"
+                                    class="btn btn-outline-success btn-block w-100">
+                                    <i class="fas fa-plus me-2"></i>Add New Product
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a asp-controller="Category" asp-action="Add" class="btn btn-outline-info btn-block w-100">
+                                    <i class="fas fa-plus me-2"></i>Add New Category
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</p>
