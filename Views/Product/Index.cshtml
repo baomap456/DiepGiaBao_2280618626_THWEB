@@ -1,47 +1,273 @@
-@model IEnumerable<THLapTrinhWeb.Models.Product>
+@using THLapTrinhWeb.Models
+
+@model IEnumerable<Product>
+
 @{
-    ViewData["Title"] = "Product List";
+    ViewData["Title"] = "Our Products";
+    var categories = ViewBag.Categories as IEnumerable<Category>;
+    var currentCategory = ViewBag.CurrentCategory as string;
+    var searchString = ViewBag.SearchString as string;
 }
-<div class="container mt-5">
-    <div class="d-flex justify-content-end mb-3">
-        <a asp-controller="Product" asp-action="Index" class="btn btn-primary mr-2">Product</a>
-        <a asp-controller="Category" asp-action="Index" class="btn btn-outline-primary">Category</a>
-    </div>
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h2>Products</h2>
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="bg-primary text-white p-4 rounded">
+                <h1 class="display-4 mb-0"><i class="fas fa-shopping-bag"></i> Our Products</h1>
+                <p class="lead mb-0">Discover amazing products at great prices</p>
+            </div>
         </div>
-        <div class="card-body">
-            <a asp-action="Add" class="btn btn-success mb-3">
-                Add Product
-            </a>
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Description</th>
-                        <th>Category</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach (var product in Model)
-                {
-                    <tr>
-                        <td>@product.Name</td>
-                        <td>@product.Price</td>
-                        <td>@product.Description</td>
-                        <td>@product.Category?.Name</td>
-                        <td>
-                            <a asp-action="Display" asp-route-id="@product.Id" class="btn btn-info btn-sm">View</a>
-                            <a asp-action="Update" asp-route-id="@product.Id" class="btn btn-warning btn-sm">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger btn-sm">Delete</a>
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
+    </div>
+
+    @if (!string.IsNullOrEmpty(currentCategory))
+    {
+        <div class="row mb-3">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="breadcrumb-item"><a asp-controller="Category" asp-action="Index">Categories</a></li>
+                        <li class="breadcrumb-item active">@currentCategory</li>
+                    </ol>
+                </nav>
+                <div class="alert alert-info">
+                    <i class="fas fa-filter"></i> 
+                    Showing products in category: <strong>@currentCategory</strong>
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-sm btn-outline-secondary ms-2">
+                        <i class="fas fa-times"></i> Clear Filter
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Sidebar Filters -->
+        <div class="col-lg-3 col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-filter"></i> Filters</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Search -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold">Search</h6>
+                        <form asp-action="Index" method="get">
+                            <div class="input-group">
+                                <input type="text" name="searchString" value="@searchString" class="form-control" placeholder="Search products...">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold">Categories</h6>
+                        <div class="list-group list-group-flush">
+                            <a asp-action="Index" class="list-group-item list-group-item-action border-0 @(string.IsNullOrEmpty(currentCategory) ? "active" : "")">
+                                <i class="fas fa-th-large"></i> All Categories
+                            </a>
+                            @if (categories != null)
+                            {
+                                @foreach (var category in categories)
+                                {
+                                    <a asp-action="Index" asp-route-category="@category.Name" 
+                                       class="list-group-item list-group-item-action border-0 @(currentCategory == category.Name ? "active" : "")">
+                                        <i class="fas fa-tag"></i> @category.Name
+                                    </a>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Price Range -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold">Price Range</h6>
+                        <div class="d-grid gap-2">
+                            <a asp-action="Index" asp-route-priceRange="0-50" class="btn btn-outline-secondary btn-sm">Under $50</a>
+                            <a asp-action="Index" asp-route-priceRange="50-100" class="btn btn-outline-secondary btn-sm">$50 - $100</a>
+                            <a asp-action="Index" asp-route-priceRange="100-200" class="btn btn-outline-secondary btn-sm">$100 - $200</a>
+                            <a asp-action="Index" asp-route-priceRange="200-999999" class="btn btn-outline-secondary btn-sm">Above $200</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="col-lg-9 col-md-8">
+            <!-- Sort & Results Info -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <span class="text-muted">
+                        Showing @Model.Count() products
+                        @if (!string.IsNullOrEmpty(currentCategory))
+                        {
+                            <span>in "@currentCategory"</span>
+                        }
+                        @if (!string.IsNullOrEmpty(searchString))
+                        {
+                            <span>for "@searchString"</span>
+                        }
+                    </span>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-sort"></i> Sort By
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" asp-action="Index" asp-route-sortBy="name">Name A-Z</a></li>
+                        <li><a class="dropdown-item" asp-action="Index" asp-route-sortBy="name_desc">Name Z-A</a></li>
+                        <li><a class="dropdown-item" asp-action="Index" asp-route-sortBy="price">Price Low to High</a></li>
+                        <li><a class="dropdown-item" asp-action="Index" asp-route-sortBy="price_desc">Price High to Low</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            @if (Model.Any())
+            {
+                <div class="row">
+                    @foreach (var product in Model)
+                    {
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
+                            <div class="card product-card h-100 border-0 shadow-sm">
+                                <div class="position-relative">
+                                    @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                    {
+                                        <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" 
+                                             style="height: 250px; object-fit: cover;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                                            <i class="fas fa-image fa-3x text-muted"></i>
+                                        </div>
+                                    }
+                                    
+                                    <!-- Product Actions Overlay -->
+                                    <div class="product-overlay">
+                                        <div class="d-flex gap-2">
+                                            <a asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <button class="btn btn-success btn-sm" onclick="addToCart(@product.Id)">
+                                                <i class="fas fa-shopping-cart"></i>
+                                            </button>
+                                            <button class="btn btn-outline-light btn-sm" onclick="addToWishlist(@product.Id)">
+                                                <i class="fas fa-heart"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sale Badge -->
+                                    <span class="badge bg-danger position-absolute top-0 start-0 m-2">
+                                        @{
+                                            var discount = Math.Round((decimal)new Random().Next(10, 40));
+                                        }
+                                        -@discount%
+                                    </span>
+                                </div>
+                                
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <small class="text-muted">@product.Category?.Name</small>
+                                        <div class="rating">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                <i class="fas fa-star @(i <= 4 ? "text-warning" : "text-muted")"></i>
+                                            }
+                                        </div>
+                                    </div>
+                                    
+                                    <h6 class="card-title mb-2">
+                                        <a asp-action="Details" asp-route-id="@product.Id" class="text-decoration-none text-dark">
+                                            @product.Name
+                                        </a>
+                                    </h6>
+                                    
+                                    <p class="card-text text-muted small mb-3">
+                                        @(product.Description?.Length > 80 ? product.Description.Substring(0, 80) + "..." : product.Description)
+                                    </p>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="h5 text-primary fw-bold mb-0">@product.Price.ToString("C")</span>
+                                            <br>
+                                            <small class="text-muted text-decoration-line-through">
+                                                $@((product.Price * 1.2m).ToString("F2"))
+                                            </small>
+                                        </div>
+                                        <button class="btn btn-primary btn-sm" onclick="addToCart(@product.Id)">
+                                            <i class="fas fa-cart-plus"></i> Add
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-search fa-5x text-muted mb-3"></i>
+                    <h3 class="text-muted">No products found</h3>
+                    <p class="text-muted">Try adjusting your search or filter criteria</p>
+                    <a asp-action="Index" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i> View All Products
+                    </a>
+                </div>
+            }
         </div>
     </div>
 </div>
+
+<style>
+    .product-card {
+        transition: all 0.3s ease;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    }
+    
+    .product-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .product-card:hover .product-overlay {
+        opacity: 1;
+    }
+    
+    .list-group-item.active {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+</style>
+
+<script>
+    function addToCart(productId) {
+        // TODO: Implement add to cart functionality
+        alert('Added to cart! Product ID: ' + productId);
+    }
+    
+    function addToWishlist(productId) {
+        // TODO: Implement wishlist functionality
+        alert('Added to wishlist! Product ID: ' + productId);
+    }
+</script>

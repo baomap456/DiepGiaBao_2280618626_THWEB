@@ -1,118 +1,378 @@
+@using THLapTrinhWeb.Models
+
+@model IEnumerable<Product>
+
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "Home - Online Store";
 }
 
-<div class="container">
-    <!-- Hero Section -->
-    <div class="jumbotron bg-primary text-white text-center py-5 mb-5 rounded">
-        <div class="container">
-            <h1 class="display-4 fw-bold">Welcome to Product Management System</h1>
-            <p class="lead">Manage your products and categories efficiently with our easy-to-use platform</p>
-            <hr class="my-4 bg-white">
-            <p class="mb-4">Get started by exploring our products or create your account to manage your own inventory.
-            </p>
-
-            <!-- Navigation Buttons -->
-            <div class="d-flex justify-content-center gap-3 flex-wrap">
-                <a asp-controller="Product" asp-action="Index" class="btn btn-light btn-lg px-4">
-                    <i class="fas fa-box me-2"></i>View Products
-                </a>
-
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <span class="text-white-50">Welcome, @User.Identity.Name!</span>
-                    <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="d-inline">
-                        <button type="submit" class="btn btn-outline-light btn-lg px-4">
-                            <i class="fas fa-sign-out-alt me-2"></i>Logout
-                        </button>
-                    </form>
-                }
-                else
-                {
-                    <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-success btn-lg px-4">
-                        <i class="fas fa-sign-in-alt me-2"></i>Login
-                    </a>
-                    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-light btn-lg px-4">
-                        <i class="fas fa-user-plus me-2"></i>Register
-                    </a>
-                }
-            </div>
+<div class="container-fluid px-0">
+    <!-- Hero Section with Carousel -->
+    <div id="heroCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
         </div>
-    </div>
-
-    <!-- Features Section -->
-    <div class="row mb-5">
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-boxes fa-3x text-primary mb-3"></i>
-                    <h5 class="card-title">Product Management</h5>
-                    <p class="card-text">Add, edit, and manage your products with detailed information including images
-                        and descriptions.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-tags fa-3x text-success mb-3"></i>
-                    <h5 class="card-title">Category Organization</h5>
-                    <p class="card-text">Organize your products into categories for better management and easier
-                        navigation.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-user-shield fa-3x text-warning mb-3"></i>
-                    <h5 class="card-title">User Authentication</h5>
-                    <p class="card-text">Secure user registration and login system to protect your data and manage
-                        access.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card bg-light">
-                <div class="card-header">
-                    <h4 class="mb-0">Quick Actions</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <a asp-controller="Product" asp-action="Index"
-                                class="btn btn-outline-primary btn-block w-100">
-                                <i class="fas fa-list me-2"></i>Browse All Products
-                            </a>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <a asp-controller="Category" asp-action="Index"
-                                class="btn btn-outline-secondary btn-block w-100">
-                                <i class="fas fa-folder me-2"></i>Browse Categories
-                            </a>
-                        </div>
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <div class="col-md-6 mb-3">
-                                <a asp-controller="Product" asp-action="Add"
-                                    class="btn btn-outline-success btn-block w-100">
-                                    <i class="fas fa-plus me-2"></i>Add New Product
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="hero-slide bg-gradient-primary text-white d-flex align-items-center"
+                    style="height: 500px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                                <h1 class="display-3 fw-bold mb-4">Summer Sale</h1>
+                                <p class="lead mb-4">Up to 50% off on selected items. Limited time offer!</p>
+                                <a asp-controller="Product" asp-action="Index" class="btn btn-light btn-lg px-5 py-3">
+                                    Shop Now <i class="fas fa-arrow-right ms-2"></i>
                                 </a>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <a asp-controller="Category" asp-action="Add" class="btn btn-outline-info btn-block w-100">
-                                    <i class="fas fa-plus me-2"></i>Add New Category
+                            <div class="col-lg-6 text-center">
+                                <i class="fas fa-shopping-bag" style="font-size: 15rem; opacity: 0.3;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="hero-slide bg-gradient-success text-white d-flex align-items-center"
+                    style="height: 500px; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                                <h1 class="display-3 fw-bold mb-4">New Arrivals</h1>
+                                <p class="lead mb-4">Discover the latest products in our collection</p>
+                                <a asp-controller="Product" asp-action="Index" class="btn btn-light btn-lg px-5 py-3">
+                                    Explore <i class="fas fa-search ms-2"></i>
                                 </a>
                             </div>
-                        }
+                            <div class="col-lg-6 text-center">
+                                <i class="fas fa-star" style="font-size: 15rem; opacity: 0.3;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="hero-slide bg-gradient-warning text-white d-flex align-items-center"
+                    style="height: 500px; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                                <h1 class="display-3 fw-bold mb-4">Free Shipping</h1>
+                                <p class="lead mb-4">Free delivery on orders over $50. Shop more, save more!</p>
+                                <a asp-controller="Product" asp-action="Index" class="btn btn-dark btn-lg px-5 py-3">
+                                    Start Shopping <i class="fas fa-truck ms-2"></i>
+                                </a>
+                            </div>
+                            <div class="col-lg-6 text-center">
+                                <i class="fas fa-truck" style="font-size: 15rem; opacity: 0.3;"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
     </div>
 </div>
-</p>
+
+<div class="container">
+    <!-- Featured Categories -->
+    <section class="mb-5">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h2 class="display-5 fw-bold">Shop by Category</h2>
+                <p class="lead text-muted">Browse our wide range of product categories</p>
+            </div>
+        </div>
+        <div class="row">
+            @if (ViewBag.Categories != null && ((List<Category>)ViewBag.Categories).Any())
+            {
+                @foreach (var category in (List<Category>)ViewBag.Categories)
+                {
+                    <div class="col-md-3 mb-4">
+                        <div class="card category-card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center p-4">
+                                <div class="category-icon mb-3">
+                                    @{
+                                        string iconClass = category.Name.ToLower() switch
+                                        {
+                                            var name when name.Contains("electronic") || name.Contains("tech") || name.Contains("laptop") || name.Contains("phone") => "fas fa-laptop",
+                                            var name when name.Contains("fashion") || name.Contains("cloth") || name.Contains("apparel") || name.Contains("wear") => "fas fa-tshirt",
+                                            var name when name.Contains("home") || name.Contains("house") || name.Contains("furniture") || name.Contains("garden") => "fas fa-home",
+                                            var name when name.Contains("sport") || name.Contains("fitness") || name.Contains("gym") || name.Contains("exercise") => "fas fa-dumbbell",
+                                            var name when name.Contains("book") || name.Contains("education") || name.Contains("learning") => "fas fa-book",
+                                            var name when name.Contains("food") || name.Contains("kitchen") || name.Contains("cooking") => "fas fa-utensils",
+                                            var name when name.Contains("beauty") || name.Contains("cosmetic") || name.Contains("makeup") => "fas fa-palette",
+                                            var name when name.Contains("toy") || name.Contains("game") || name.Contains("kid") => "fas fa-gamepad",
+                                            var name when name.Contains("car") || name.Contains("auto") || name.Contains("vehicle") => "fas fa-car",
+                                            var name when name.Contains("health") || name.Contains("medical") || name.Contains("medicine") => "fas fa-heartbeat",
+                                            _ => "fas fa-tag"
+                                        };
+                                        
+                                        string colorClass = category.Name.ToLower() switch
+                                        {
+                                            var name when name.Contains("electronic") || name.Contains("tech") => "text-primary",
+                                            var name when name.Contains("fashion") || name.Contains("cloth") => "text-success",
+                                            var name when name.Contains("home") || name.Contains("house") => "text-warning",
+                                            var name when name.Contains("sport") || name.Contains("fitness") => "text-danger",
+                                            var name when name.Contains("book") || name.Contains("education") => "text-info",
+                                            var name when name.Contains("food") || name.Contains("kitchen") => "text-secondary",
+                                            var name when name.Contains("beauty") || name.Contains("cosmetic") => "text-pink",
+                                            _ => "text-primary"
+                                        };
+                                    }
+                                    <i class="@iconClass fa-3x @colorClass"></i>
+                                </div>
+                                <h5 class="card-title">@category.Name</h5>
+                               
+                                <a asp-controller="Product" asp-action="Index" asp-route-category="@category.Name" 
+                                   class="btn btn-outline-@(colorClass.Replace("text-", ""))">
+                                    Browse
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <!-- Fallback nếu không có categories trong database -->
+                <div class="col-md-3 mb-4">
+                    <div class="card category-card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="category-icon mb-3">
+                                <i class="fas fa-laptop fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="card-title">Electronics</h5>
+                            <p class="card-text text-muted">Latest gadgets and devices</p>
+                            <a asp-controller="Product" asp-action="Index" asp-route-category="Electronics" 
+                               class="btn btn-outline-primary">Browse</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card category-card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="category-icon mb-3">
+                                <i class="fas fa-tshirt fa-3x text-success"></i>
+                            </div>
+                            <h5 class="card-title">Fashion</h5>
+                            <p class="card-text text-muted">Trendy clothing and accessories</p>
+                            <a asp-controller="Product" asp-action="Index" asp-route-category="Fashion" 
+                               class="btn btn-outline-success">Browse</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card category-card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="category-icon mb-3">
+                                <i class="fas fa-home fa-3x text-warning"></i>
+                            </div>
+                            <h5 class="card-title">Home & Garden</h5>
+                            <p class="card-text text-muted">Everything for your home</p>
+                            <a asp-controller="Product" asp-action="Index" asp-route-category="Home & Garden" 
+                               class="btn btn-outline-warning">Browse</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card category-card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="category-icon mb-3">
+                                <i class="fas fa-dumbbell fa-3x text-danger"></i>
+                            </div>
+                            <h5 class="card-title">Sports</h5>
+                            <p class="card-text text-muted">Sports and outdoor equipment</p>
+                            <a asp-controller="Product" asp-action="Index" asp-route-category="Sports" 
+                               class="btn btn-outline-danger">Browse</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        <!-- Link to view all categories -->
+        <div class="text-center">
+            <a asp-controller="Category" asp-action="Index" class="btn btn-primary btn-lg">
+                <i class="fas fa-th-large"></i> View All Categories
+            </a>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="mb-5">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h2 class="display-5 fw-bold">Featured Products</h2>
+                <p class="lead text-muted">Our best-selling items this month</p>
+            </div>
+        </div>
+        <div class="row">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var product in Model.Take(8))
+                {
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        <div class="card product-card h-100 border-0 shadow-sm">
+                            <div class="position-relative">
+                                @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                {
+                                    <img src="@product.ImageUrl" class="card-img-top product-image" alt="@product.Name"
+                                        style="height: 200px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                        <i class="fas fa-image fa-3x text-muted"></i>
+                                    </div>
+                                }
+                            <div class="product-overlay">
+                                <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id"
+                                    class="btn btn-primary btn-sm">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                            </div>
+                            <span class="badge bg-danger position-absolute top-0 start-0 m-2">Sale</span>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">@product.Name</h6>
+                            <p class="card-text text-muted small">@product.Category?.Name</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="h5 text-primary fw-bold">@product.Price.ToString("C")</span>
+                                    <small class="text-muted text-decoration-line-through">$@((product.Price *
+                                                                            1.2m).ToString("F2"))</small>
+                            </div>
+                            <div class="rating">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="far fa-star text-warning"></i>
+                                <small class="text-muted">(4.0)</small>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary w-100 mt-2">
+                            <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+                        }
+            }
+            else
+            {
+                <div class="col-12 text-center">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No products available at the moment. Check back soon!
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="text-center">
+            <a asp-controller="Product" asp-action="Index" class="btn btn-outline-primary btn-lg">
+                View All Products <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="mb-5">
+        <div class="row bg-light rounded p-4">
+            <div class="col-md-3 text-center mb-3">
+                <div class="benefit-item">
+                    <i class="fas fa-shipping-fast fa-2x text-primary mb-2"></i>
+                    <h6>Free Shipping</h6>
+                    <small class="text-muted">On orders over $50</small>
+                </div>
+            </div>
+            <div class="col-md-3 text-center mb-3">
+                <div class="benefit-item">
+                    <i class="fas fa-undo fa-2x text-success mb-2"></i>
+                    <h6>Easy Returns</h6>
+                    <small class="text-muted">30-day return policy</small>
+                </div>
+            </div>
+            <div class="col-md-3 text-center mb-3">
+                <div class="benefit-item">
+                    <i class="fas fa-headset fa-2x text-warning mb-2"></i>
+                    <h6>24/7 Support</h6>
+                    <small class="text-muted">Customer service</small>
+                </div>
+            </div>
+            <div class="col-md-3 text-center mb-3">
+                <div class="benefit-item">
+                    <i class="fas fa-shield-alt fa-2x text-info mb-2"></i>
+                    <h6>Secure Payment</h6>
+                    <small class="text-muted">SSL encrypted</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="mb-5">
+        <div class="bg-primary text-white rounded p-5 text-center">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <h3 class="mb-3">Stay Updated!</h3>
+                    <p class="mb-4">Subscribe to our newsletter and get exclusive deals and updates.</p>
+                    <div class="input-group">
+                        <input type="email" class="form-control" placeholder="Enter your email">
+                        <button class="btn btn-light" type="button">
+                            <i class="fas fa-paper-plane"></i> Subscribe
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .category-card:hover {
+        transform: translateY(-5px);
+        transition: all 0.3s ease;
+    }
+
+    .product-card {
+        transition: all 0.3s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .product-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .product-card:hover .product-overlay {
+        opacity: 1;
+    }
+
+    .benefit-item:hover {
+        transform: scale(1.05);
+        transition: all 0.3s ease;
+    }
+</style>

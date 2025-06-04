@@ -15,10 +15,51 @@ namespace THLapTrinhWeb.Controllers
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, string category, string sortBy, string priceRange)
         {
             var products = await _productRepository.GetAllAsync();
-            return View(products);
+            var categories = await _categoryRepository.GetAllAsync();
+
+            // Filter by search string
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(p => p.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                                             p.Description.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+            }
+
+            // Filter by category - QUAN TRỌNG: Phần này sẽ filter products theo category
+            if (!string.IsNullOrEmpty(category))
+            {
+                products = products.Where(p => p.Category?.Name == category);
+            }
+
+            // Filter by price range
+            if (!string.IsNullOrEmpty(priceRange))
+            {
+                var range = priceRange.Split('-');
+                if (range.Length == 2 && decimal.TryParse(range[0], out decimal minPrice) && decimal.TryParse(range[1], out decimal maxPrice))
+                {
+                    products = products.Where(p => p.Price >= minPrice && p.Price <= maxPrice);
+                }
+            }
+
+            // Sort products
+            products = sortBy switch
+            {
+                "name" => products.OrderBy(p => p.Name),
+                "name_desc" => products.OrderByDescending(p => p.Name),
+                "price" => products.OrderBy(p => p.Price),
+                "price_desc" => products.OrderByDescending(p => p.Price),
+                _ => products.OrderBy(p => p.Name)
+            };
+
+            ViewBag.Categories = categories;
+            ViewBag.CurrentCategory = category;
+            ViewBag.SearchString = searchString;
+            ViewBag.SortBy = sortBy;
+            ViewBag.PriceRange = priceRange;
+
+            return View(products.ToList());
         }
 
         public async Task<IActionResult> Add()

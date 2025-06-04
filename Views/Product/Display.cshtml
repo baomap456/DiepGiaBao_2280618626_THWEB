@@ -1,18 +1,140 @@
-@model THLapTrinhWeb.Models.Product
+@using THLapTrinhWeb.Models
+@model Product
 
-<div class="container mt-5">
-    <div class="card shadow-sm">
-        <div class="card-header bg-secondary text-white">
-            <h2 class="mb-0">@Model.Name</h2>
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Product Image -->
+            <div class="card border-0">
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <img src="@Model.ImageUrl" class="card-img-top rounded" alt="@Model.Name" />
+                }
+                else
+                {
+                    <div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 400px;">
+                        <i class="fas fa-image fa-5x text-muted"></i>
+                    </div>
+                }
+            </div>
         </div>
-        <div class="card-body">
-            <h4 class="mb-3">Price: @Model.Price</h4>
-            <p class="card-text">@Model.Description</p>
-            @if (!string.IsNullOrEmpty(Model.ImageUrl))
-            {
-                <img src="@Model.ImageUrl" alt="Product Image" class="img-fluid mb-3" style="max-width:200px;" />
-            }
-            <a asp-action="Index" class="btn btn-primary">Back to List</a>
+
+        <div class="col-md-6">
+            <!-- Product Info -->
+            <div class="ps-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="breadcrumb-item"><a asp-controller="Product" asp-action="Index">Products</a></li>
+                        <li class="breadcrumb-item active">@Model.Name</li>
+                    </ol>
+                </nav>
+
+                <h1 class="mb-2">@Model.Name</h1>
+
+                <div class="mb-3">
+                    <span class="badge bg-primary">@Model.Category?.Name</span>
+                    <div class="rating d-inline-block ms-2">
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="far fa-star text-warning"></i>
+                        <span class="ms-1 text-muted">(4.0) • 24 reviews</span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <span class="h2 text-primary fw-bold">@Model.Price.ToString("C")</span>
+                    <span class="h5 text-muted text-decoration-line-through ms-2">$@((Model.Price *
+                                                1.3m).ToString("F2"))</span>
+                    <span class="badge bg-success ms-2">Save 23%</span>
+                </div>
+
+                <p class="lead mb-4">@Model.Description</p>
+
+                <!-- Add to Cart Form -->
+                <div class="mb-4">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Quantity</label>
+                            <div class="input-group">
+                                <button class="btn btn-outline-secondary" type="button"
+                                    onclick="decreaseQuantity()">-</button>
+                                <input type="number" class="form-control text-center" id="quantity" value="1" min="1"
+                                    max="10">
+                                <button class="btn btn-outline-secondary" type="button"
+                                    onclick="increaseQuantity()">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex">
+                        <button class="btn btn-primary btn-lg flex-fill" onclick="addToCart(@Model.Id)">
+                            <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                        </button>
+                        <button class="btn btn-outline-secondary btn-lg" onclick="addToWishlist(@Model.Id)">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Features -->
+                <div class="border-top pt-4">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <i class="fas fa-shipping-fast fa-2x text-primary mb-2"></i>
+                            <div><small>Free Shipping</small></div>
+                        </div>
+                        <div class="col-4">
+                            <i class="fas fa-undo fa-2x text-success mb-2"></i>
+                            <div><small>Easy Returns</small></div>
+                        </div>
+                        <div class="col-4">
+                            <i class="fas fa-shield-alt fa-2x text-info mb-2"></i>
+                            <div><small>Secure Payment</small></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Products -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Products
+            </a>
         </div>
     </div>
 </div>
+
+<script>
+    function increaseQuantity() {
+        let qty = document.getElementById('quantity');
+        if (parseInt(qty.value) < parseInt(qty.max)) {
+            qty.value = parseInt(qty.value) + 1;
+        }
+    }
+
+    function decreaseQuantity() {
+        let qty = document.getElementById('quantity');
+        if (parseInt(qty.value) > parseInt(qty.min)) {
+            qty.value = parseInt(qty.value) - 1;
+        }
+    }
+
+    function addToCart(productId) {
+        let quantity = document.getElementById('quantity').value;
+        alert(`Added ${quantity} item(s) to cart! Product ID: ${productId}`);
+    }
+
+    function addToWishlist(productId) {
+        alert('Added to wishlist! Product ID: ' + productId);
+    }
+</script>

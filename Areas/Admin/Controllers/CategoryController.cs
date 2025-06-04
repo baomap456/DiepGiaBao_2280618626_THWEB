@@ -1,65 +1,62 @@
-using THLapTrinhWeb.Models;
-// using THLapTrinhWeb.Repositories;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-namespace THLapTrinhWeb.Controllers
+using THLapTrinhWeb.Models;
+using THLapTrinhWeb.Repositories;
+
+namespace THLapTrinhWeb.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Authorize(Roles = "Admin,Employee")]
     public class CategoryController : Controller
     {
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IProductRepository _productRepository;
 
-        public CategoryController(ICategoryRepository categoryRepository, IProductRepository productRepository)
+        public CategoryController(ICategoryRepository categoryRepository)
         {
             _categoryRepository = categoryRepository;
-            _productRepository = productRepository;
         }
 
-        // GET: Category
+        // GET: Admin/Category
         public async Task<IActionResult> Index()
         {
             var categories = await _categoryRepository.GetAllAsync();
-            var products = await _productRepository.GetAllAsync();
-
-            // Count products for each category
-            var productCounts = new Dictionary<int, int>();
-            foreach (var category in categories)
-            {
-                productCounts[category.Id] = products.Count(p => p.CategoryId == category.Id);
-            }
-
-            ViewBag.ProductCounts = productCounts;
             return View(categories);
         }
 
-        public async Task<IActionResult> Display(int id)
+        // GET: Admin/Category/Details/5
+        public async Task<IActionResult> Details(int id)
         {
-
             var category = await _categoryRepository.GetByIdAsync(id);
             if (category == null)
             {
                 return NotFound();
             }
-
             return View(category);
         }
+
+        // GET: Admin/Category/Add
         public IActionResult Add()
         {
             return View();
         }
 
+        // POST: Admin/Category/Add
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(Category category)
         {
             if (ModelState.IsValid)
             {
                 await _categoryRepository.AddAsync(category);
+                TempData["SuccessMessage"] = "Category added successfully!";
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
         }
 
-        public async Task<IActionResult> Update(int id)
+        // GET: Admin/Category/Edit/5
+        public async Task<IActionResult> Edit(int id)
         {
             var category = await _categoryRepository.GetByIdAsync(id);
             if (category == null)
@@ -69,8 +66,10 @@ namespace THLapTrinhWeb.Controllers
             return View(category);
         }
 
+        // POST: Admin/Category/Edit/5
         [HttpPost]
-        public async Task<IActionResult> Update(int id, Category category)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Category category)
         {
             if (id != category.Id)
             {
@@ -79,30 +78,38 @@ namespace THLapTrinhWeb.Controllers
 
             if (ModelState.IsValid)
             {
-                await _categoryRepository.UpdateAsync(category);
+                try
+                {
+                    await _categoryRepository.UpdateAsync(category);
+                    TempData["SuccessMessage"] = "Category updated successfully!";
+                }
+                catch (Exception)
+                {
+                    TempData["ErrorMessage"] = "An error occurred while updating the category.";
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
         }
+
+        // GET: Admin/Category/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-
             var category = await _categoryRepository.GetByIdAsync(id);
             if (category == null)
             {
                 return NotFound();
-
             }
             return View(category);
         }
-        [HttpPost, ActionName("DeleteConfirmed")]
+
+        // POST: Admin/Category/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await _categoryRepository.GetByIdAsync(id);
-            if (category != null)
-            {
-                await _categoryRepository.DeleteAsync(id);
-            }
+            await _categoryRepository.DeleteAsync(id);
+            TempData["SuccessMessage"] = "Category deleted successfully!";
             return RedirectToAction(nameof(Index));
         }
     }
