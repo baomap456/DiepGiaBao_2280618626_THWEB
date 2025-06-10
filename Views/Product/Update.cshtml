@@ -1,6 +1,6 @@
-@model THLapTrinhWeb.Models.Product
+ @model THLapTrinhWeb.Models.Product
 
-<div class="container mt-5">
+<!--<div class="container mt-5">
     <div class="card shadow p-4">
         <h2 class="text-warning mb-4">Chỉnh sửa sản phẩm</h2>
 
@@ -39,19 +39,19 @@
                 }
             </div>
 
-            <!-- Chỉnh sửa ảnh sản phẩm -->
+            
             <div class="mb-3">
                 <label asp-for="ImageUrl" class="form-label">Ảnh sản phẩm mới</label>
                 <input type="file" asp-for="ImageUrl" class="form-control" />
             </div>
 
-            <!-- Hiển thị các ảnh bổ sung -->
+            
             <div class="mb-3">
-                <label asp-for="ImageUrls" class="form-label">Ảnh bổ sung hiện tại</label>
-                @if (Model.ImageUrls != null && Model.ImageUrls.Any())
+                <label asp-for="ImageUrl" class="form-label">Ảnh bổ sung hiện tại</label>
+                @if (Model.ImageUrl != null && Model.ImageUrl.Any())
                 {
                     <div class="row">
-                        @foreach (var imageUrl in Model.ImageUrls)
+                        @foreach (var imageUrl in Model.ImageUrl)
                         {
                             <div class="col-md-3">
                                 <img src="@imageUrl" alt="Additional Product Image" class="img-fluid" style="max-width: 100%; height: auto;" />
@@ -65,7 +65,7 @@
                 }
             </div>
 
-            <!-- Thêm ảnh bổ sung -->
+            
             <div class="mb-3">
                 <label asp-for="ImageUrls" class="form-label">Ảnh bổ sung mới</label>
                 <input type="file" asp-for="ImageUrls" class="form-control" multiple />
@@ -78,4 +78,4 @@
             </div>
         </form>
     </div>
-</div>
+</div> -->

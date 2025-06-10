@@ -2,6 +2,7 @@ using THLapTrinhWeb.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using THLapTrinhWeb.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container. 
