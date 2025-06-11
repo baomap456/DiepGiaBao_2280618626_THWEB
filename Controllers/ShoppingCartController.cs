@@ -7,7 +7,7 @@ using THLapTrinhWeb.Models;
 
 namespace THLapTrinhWeb.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Customer,Employee")]
     public class ShoppingCartController : Controller
     {
         private readonly IProductRepository _productRepository;
@@ -20,6 +20,40 @@ namespace THLapTrinhWeb.Controllers
             _context = context;
             _userManager = userManager;
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddToCartAjax(int productId, int quantity = 1)
+        {
+            try
+            {
+                var product = await GetProductFromDatabase(productId);
+
+                if (product == null)
+                {
+                    return Json(new { success = false, message = "Product not found." });
+                }
+
+                var cartItem = new CartItem
+                {
+                    ProductId = productId,
+                    ProductName = product.Name,
+                    Price = product.Price,
+                    Quantity = quantity,
+                    ImageUrl = product.ImageUrl
+                };
+
+                var cart = HttpContext.Session.GetObjectFromJson<ShoppingCart>("Cart") ?? new ShoppingCart();
+                cart.AddItem(cartItem);
+                HttpContext.Session.SetObjectAsJson("Cart", cart);
+
+                return Json(new { success = true, message = $"{product.Name} added to cart.", cartCount = cart.Items.Count });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error adding to cart: " + ex.Message });
+            }
+        }
+
 
         public async Task<IActionResult> AddToCart(int productId, int quantity = 1)
         {
@@ -47,7 +81,7 @@ namespace THLapTrinhWeb.Controllers
                 HttpContext.Session.SetObjectAsJson("Cart", cart);
 
                 TempData["SuccessMessage"] = $"{product.Name} added to cart successfully!";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
             catch (Exception)
             {
@@ -61,6 +95,28 @@ namespace THLapTrinhWeb.Controllers
             var cart = HttpContext.Session.GetObjectFromJson<ShoppingCart>("Cart") ?? new ShoppingCart();
             return View(cart);
         }
+
+
+        [HttpPost]
+        public IActionResult RemoveFromCartAjax(int productId)
+        {
+            try
+            {
+                var cart = HttpContext.Session.GetObjectFromJson<ShoppingCart>("Cart");
+                if (cart == null)
+                    return Json(new { success = false, message = "Cart is empty." });
+
+                cart.RemoveItem(productId);
+                HttpContext.Session.SetObjectAsJson("Cart", cart);
+
+                return Json(new { success = true, message = "Item removed.", cartCount = cart.Items.Count });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error removing item: " + ex.Message });
+            }
+        }
+
 
         public IActionResult RemoveFromCart(int productId)
         {
@@ -85,6 +141,33 @@ namespace THLapTrinhWeb.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+
+        [HttpPost]
+        public IActionResult UpdateQuantityAjax(int productId, int quantity)
+        {
+            try
+            {
+                var cart = HttpContext.Session.GetObjectFromJson<ShoppingCart>("Cart");
+                if (cart == null)
+                    return Json(new { success = false, message = "Cart is empty." });
+
+                cart.UpdateQuantity(productId, quantity);
+                HttpContext.Session.SetObjectAsJson("Cart", cart);
+
+                return Json(new
+                {
+                    success = true,
+                    message = "Quantity updated.",
+                    totalPrice = cart.GetTotalPrice(),
+                    cartCount = cart.Items.Sum(i => i.Quantity)
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error updating quantity: " + ex.Message });
+            }
         }
 
         // Thêm method UpdateQuantity
@@ -138,6 +221,15 @@ namespace THLapTrinhWeb.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult GetCartCount()
+        {
+            var cart = HttpContext.Session.GetObjectFromJson<ShoppingCart>("Cart") ?? new ShoppingCart();
+            var totalQuantity = cart.Items.Sum(i => i.Quantity);
+
+            return Json(new { count = totalQuantity });
         }
 
         public IActionResult Checkout()
@@ -269,41 +361,6 @@ namespace THLapTrinhWeb.Controllers
         }
 
         // Test method
-        public IActionResult TestOrderCompleted()
-        {
-            return RedirectToAction("OrderCompleted", new { orderId = 123 });
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> TestCheckout()
-        {
-            try
-            {
-                var user = await _userManager.GetUserAsync(User);
-                if (user == null)
-                {
-                    return Content("User not found");
-                }
-
-                var testOrder = new Order
-                {
-                    UserId = user.Id,
-                    OrderDate = DateTime.UtcNow,
-                    TotalPrice = 100000,
-                    ShippingAddress = "Test Address 123",
-                    Notes = "Test order"
-                };
-
-                _context.Orders.Add(testOrder);
-                await _context.SaveChangesAsync();
-
-                return View("OrderCompleted", testOrder.Id);
-            }
-            catch (Exception ex)
-            {
-                return Content($"Error: {ex.Message}");
-            }
-        }
 
         private async Task<Product> GetProductFromDatabase(int productId)
         {

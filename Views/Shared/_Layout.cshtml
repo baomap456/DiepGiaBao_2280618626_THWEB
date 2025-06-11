@@ -1,3 +1,13 @@
+
+@using THLapTrinhWeb.Extensions
+@using THLapTrinhWeb.Models
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<!-- @{
+    var cart = HttpContextAccessor.HttpContext?.Session.GetObjectFromJson<ShoppingCart>("Cart") ?? new ShoppingCart();
+    var cartCount = cart.Items.Sum(i => i.Quantity);
+} -->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -61,13 +71,14 @@
                     <ul class="navbar-nav">
                         @if (User.Identity.IsAuthenticated)
                         {
+                            
                         <!-- Shopping Cart với số lượng sản phẩm -->
                         <li class="nav-item">
                             <a class="nav-link text-dark position-relative" asp-controller="ShoppingCart" asp-action="Index">
                                 <i class="fas fa-shopping-cart fa-lg"></i>
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                                     id="cart-count">
-                                    0
+                                    @cartCount
                                 </span>
                                 <span class="d-none d-lg-inline ms-1">Cart</span>
                             </a>
@@ -167,5 +178,4 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-
 </html>

@@ -278,7 +278,16 @@ function updateQuantity(productId, newQuantity) {
         }
         return;
     }
-    
+    function removeFromCart(productId) {
+        $.post("/ShoppingCart/RemoveFromCartAjax", { productId }, function (data) {
+            if (data.success) {
+                alert(data.message);
+                location.reload(); // or remove item from DOM
+            } else {
+                alert("Failed: " + data.message);
+            }
+        });
+    }
     // Create a form to submit quantity update
     const form = document.createElement('form');
     form.method = 'POST';

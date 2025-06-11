@@ -257,11 +257,7 @@
                                         <a asp-controller="Product" asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm">
                                             <i class="fas fa-eye me-1"></i> View Details
                                         </a>
-                                        <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-productid="@item.Id" asp-route-quantity="@numberOfProducts">
-                                            <button class="btn btn-outline-dark w-100">
-                                                <i class="fas fa-shopping-cart me-1"></i> Add to Cart
-                                            </button>
-                                        </a>
+                                        <button class="btn-add-to-cart" data-product-id="@item.Id">Thêm vào giỏ hàng</button>
                                     </div>
                                 </div>
                             </div>
@@ -339,6 +335,33 @@
         </div>
     </section>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.btn-add-to-cart').click(function () {
+            const productId = $(this).data('product-id');
+
+            $.ajax({
+                url: '/ShoppingCart/AddToCartAjax',
+                type: 'POST',
+                data: { productId: productId, quantity: 1 },
+                success: function (res) {
+                    if (res.success) {
+                        alert(res.message);
+                        updateCartCount();
+                    } else {
+                        alert("Thêm thất bại!");
+                    }
+                },
+                error: function () {
+                    alert("Có lỗi xảy ra khi thêm vào giỏ hàng.");
+                }
+            });
+        });
+    });
+</script>
 
 <style>
     .category-card:hover {
