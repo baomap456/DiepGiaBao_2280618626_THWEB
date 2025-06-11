@@ -61,13 +61,15 @@
                     <ul class="navbar-nav">
                         @if (User.Identity.IsAuthenticated)
                         {
-                        <!-- Shopping Cart -->
+                        <!-- Shopping Cart với số lượng sản phẩm -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark position-relative" href="#">
-                                <i class="fas fa-shopping-cart"></i>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <a class="nav-link text-dark position-relative" asp-controller="ShoppingCart" asp-action="Index">
+                                <i class="fas fa-shopping-cart fa-lg"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                    id="cart-count">
                                     0
                                 </span>
+                                <span class="d-none d-lg-inline ms-1">Cart</span>
                             </a>
                         </li>
 

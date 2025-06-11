@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\THLapTrinhWeb.props" />
-</Project>

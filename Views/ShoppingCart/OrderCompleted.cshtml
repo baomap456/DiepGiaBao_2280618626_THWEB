@@ -1,0 +1,142 @@
+@model int
+
+@{
+    ViewData["Title"] = "Order Completed";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Success Card -->
+            <div class="card shadow-lg border-0 mb-4">
+                <div class="card-body text-center p-5">
+                    <!-- Success Icon -->
+                    <div class="mb-4">
+                        <i class="fas fa-check-circle text-success" style="font-size: 6rem;"></i>
+                    </div>
+
+                    <!-- Success Message -->
+                    <h1 class="display-4 text-success fw-bold mb-3">Order Completed!</h1>
+                    <p class="lead text-muted mb-4">
+                        Thank you for your purchase. Your order has been successfully placed.
+                    </p>
+
+                    <!-- Order Summary Info (Simple) -->
+                    <div class="card bg-light border-0 mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <i class="fas fa-receipt me-2"></i>Order Summary
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Order ID:</strong>
+                                    <span class="text-primary">#@Model</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Order Date:</strong>
+                                    <span>@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Next Steps -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold mb-3">What happens next?</h6>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <i class="fas fa-envelope fa-2x text-primary mb-2"></i>
+                                <p class="small">
+                                    <strong>Email Confirmation</strong><br>
+                                    You'll receive an order confirmation email shortly
+                                </p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <i class="fas fa-box fa-2x text-warning mb-2"></i>
+                                <p class="small">
+                                    <strong>Processing</strong><br>
+                                    We'll prepare your order for shipment
+                                </p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <i class="fas fa-truck fa-2x text-success mb-2"></i>
+                                <p class="small">
+                                    <strong>Delivery</strong><br>
+                                    Your order will be delivered within 3-5 business days
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg">
+                            <i class="fas fa-home me-2"></i>Continue Shopping
+                        </a>
+                        <a asp-controller="ShoppingCart" asp-action="OrderDetails" asp-route-orderId="@Model"
+                            class="btn btn-outline-info btn-lg">
+                            <i class="fas fa-receipt me-2"></i>View Order Details
+                        </a>
+                        <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-list me-2"></i>Browse Products
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: all 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+    }
+
+    .btn {
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    /* Success animation */
+    .fa-check-circle {
+        animation: successPulse 2s ease-in-out infinite;
+    }
+
+
+    successPulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    /* Fade in animation */
+    .card {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+
+    fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
